@@ -163,6 +163,20 @@ int main()
 					BlockArray[i][j].setPosition(sf::Vector2<float>(-100.0f, 100.0f));
 					score++;
 				}
+				if (score >= 48 * 3) {
+					// reset the score
+					score = 0;
+					// reset the lives
+					lives = 3;
+
+					for (int i = 0; i < 48; i++)
+					{
+						for (int j = 0; j < 3; j++)
+						{
+							BlockArray[i][j].setPosition(sf::Vector2<float>(i * 40.0f, j * 40.0f));
+						}
+					}
+				}
 			}
 		}
 
