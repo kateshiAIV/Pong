@@ -1,5 +1,6 @@
 #include "Bat.h"
 #include "Ball.h"
+#include "Block.h"
 #include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
@@ -19,6 +20,15 @@ int main()
 	// Create a bat at the bottom center of the screen
 	Bat bat(1920 / 2, 1080 - 60);
 	Ball ball(1920 / 2, 1080 / 2);
+	Block BlockArray[48][3];
+	
+	for (int i = 0; i < 48; i++) 
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			BlockArray[i][j].setPosition(sf::Vector2<float>(i * 40.0f, (j * 40.0f)+150.0f));
+		}
+	}
 
 	// Retro-style font
 	sf::Font font;
@@ -32,7 +42,7 @@ int main()
 	hud.setCharacterSize(75);
 
 	// Choose a color
-	hud.setFillColor(sf::Color::White);
+	hud.setFillColor(sf::Color::Red);
 	hud.setPosition(sf::Vector2<float>(20, 20));
 
 
@@ -102,9 +112,17 @@ int main()
 				score = 0;
 				// reset the lives
 				lives = 3;
+
+				for (int i = 0; i < 48; i++)
+				{
+					for (int j = 0; j < 3; j++)
+					{
+						BlockArray[i][j].setPosition(sf::Vector2<float>(i * 40.0f, j * 40.0f));
+					}
+				}
 			}
 		}
-		if (ball.getPosition().getCenter().y < 0.0f)
+		if (ball.getPosition().getCenter().y < 150.0f)
 		{
 			// reverse the ball direction
 			score++;
@@ -125,6 +143,29 @@ int main()
 			ball.reboundTopOrBat();
 		}
 
+		for (int i = 0; i < 48; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (ball.getPosition().findIntersection(BlockArray[i][j].getPosition())
+					&& (ball.getPosition().getCenter().y) >= (BlockArray[i][j].getPosition().getCenter().y+20.0f)
+					)
+				{
+					ball.reboundTopOrBat();
+					BlockArray[i][j].setPosition(sf::Vector2<float>(-100.0f, 100.0f));
+					score++;
+				}
+				else if (ball.getPosition().findIntersection(BlockArray[i][j].getPosition())
+					&& (ball.getPosition().getCenter().y) < (BlockArray[i][j].getPosition().getCenter().y + 20.0f)
+					)
+				{
+					ball.reboundSides();
+					BlockArray[i][j].setPosition(sf::Vector2<float>(-100.0f, 100.0f));
+					score++;
+				}
+			}
+		}
+
 
 
 		//TODO: check collsion with a bat.
@@ -136,6 +177,14 @@ int main()
 
 		//draw
 		window.clear();
+
+		for (int i = 0; i < 48; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				window.draw(BlockArray[i][j].getShape());
+			}
+		}
 		window.draw(hud);
 		window.draw(bat.getShape());
 		window.draw(ball.getShape());
