@@ -12,7 +12,7 @@ private:
 	float m_DirectionY = 0.2f;
 public:
 	Ball(float startX, float startY);
-	sf::Vector2<float> getPosition();
+	sf::FloatRect getPosition();
 	sf::RectangleShape getShape();
 	float getXVelocity();
 	void reboundSides();

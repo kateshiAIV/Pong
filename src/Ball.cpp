@@ -14,9 +14,9 @@ sf::RectangleShape Ball::getShape()
 	return m_Shape;
 }
 
-sf::Vector2<float> Ball::getPosition()
+sf::FloatRect Ball::getPosition()
 {
-	return m_Shape.getPosition();
+	return m_Shape.getGlobalBounds();
 }
 
 

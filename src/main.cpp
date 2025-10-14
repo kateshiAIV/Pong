@@ -90,7 +90,7 @@ int main()
 		ss << "Score:" << score << " Lives:" << lives;
 		hud.setString(ss.str());
 
-		if (ball.getPosition().y > window.getSize().y)
+		if (ball.getPosition().getCenter().y > window.getSize().y)
 		{
 			// reverse the ball direction
 			ball.reboundBottom();
@@ -104,21 +104,35 @@ int main()
 				lives = 3;
 			}
 		}
-		if (ball.getPosition().y < 0.0f)
+		if (ball.getPosition().getCenter().y < 0.0f)
 		{
 			// reverse the ball direction
+			score++;
 			ball.reboundTopOrBat();
 		}
-		if (ball.getPosition().x < 0.0f)
+		if (ball.getPosition().getCenter().x < 0.0f)
 		{
 			// reverse the ball direction
 			ball.reboundSides();
 		}
-		if (ball.getPosition().x > window.getSize().x)
+		if (ball.getPosition().getCenter().x > window.getSize().x)
 		{
 			// reverse the ball direction
 			ball.reboundSides();
 		}
+		if (ball.getPosition().findIntersection(bat.getPosition())) 
+		{
+			ball.reboundTopOrBat();
+		}
+
+
+
+		//TODO: check collsion with a bat.
+		//if (ball.getPosition().x > window.getSize().x)
+		//{
+		//	// reverse the ball direction
+		//	ball.reboundSides();
+		//}
 
 		//draw
 		window.clear();
