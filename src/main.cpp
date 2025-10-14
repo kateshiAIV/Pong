@@ -1,4 +1,5 @@
 #include "Bat.h"
+#include "Ball.h"
 #include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
@@ -17,7 +18,7 @@ int main()
 
 	// Create a bat at the bottom center of the screen
 	Bat bat(1920 / 2, 1080 - 60);
-
+	Ball ball(1920 / 2, 1080 / 2);
 
 	// Retro-style font
 	sf::Font font;
@@ -81,6 +82,7 @@ int main()
 		// Update the bat
 		sf::Time dt = clock.restart();
 		bat.update(dt);
+		ball.update(dt);
 
 
 		// Update the HUD text
@@ -88,11 +90,41 @@ int main()
 		ss << "Score:" << score << " Lives:" << lives;
 		hud.setString(ss.str());
 
+		if (ball.getPosition().y > window.getSize().y)
+		{
+			// reverse the ball direction
+			ball.reboundBottom();
+			// Remove a life
+			lives--;
+			// Check for zero lives
+			if (lives < 1) {
+				// reset the score
+				score = 0;
+				// reset the lives
+				lives = 3;
+			}
+		}
+		if (ball.getPosition().y < 0.0f)
+		{
+			// reverse the ball direction
+			ball.reboundTopOrBat();
+		}
+		if (ball.getPosition().x < 0.0f)
+		{
+			// reverse the ball direction
+			ball.reboundSides();
+		}
+		if (ball.getPosition().x > window.getSize().x)
+		{
+			// reverse the ball direction
+			ball.reboundSides();
+		}
 
 		//draw
 		window.clear();
 		window.draw(hud);
 		window.draw(bat.getShape());
+		window.draw(ball.getShape());
 		window.display();
 
 
